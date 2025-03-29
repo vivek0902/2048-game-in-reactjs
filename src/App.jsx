@@ -4,12 +4,33 @@ import "./App.css";
 const SIZE = 4;
 
 const genetateEmptyBoard = () => {
-  return [
-    [2, 2, 0, 0],
-    [2, 2, 4, 4],
-    [8, 8, 16, 16],
-    [8, 8, 16, 16],
-  ];
+  return Array(SIZE)
+    .fill()
+    .map(() => Array(SIZE).fill(0));
+};
+
+const getRandomEmptyCell = (newBoard) => {
+  let emptyCells = [];
+  newBoard.map((row, r) =>
+    row.map((cell, c) => {
+      if (cell === 0) {
+        emptyCells.push([r, c]);
+      }
+    })
+  );
+
+  return emptyCells.length
+    ? emptyCells[Math.floor(Math.random() * emptyCells.length)]
+    : null;
+};
+
+const addNewTile = (board) => {
+  let newBoard = board.map((row) => [...row]);
+  let cell = getRandomEmptyCell(newBoard); // cell value like [1,2] like this so cell[0]=1 and cell[1]=2
+  if (cell) {
+    newBoard[cell[0]][cell[1]] = Math.random() < 0.8 ? 2 : 4;
+  }
+  return newBoard;
 };
 
 const mergeRow = (row) => {
@@ -53,7 +74,7 @@ const downMove = (board) => transpose(rightMove(transpose(board)));
 
 function App() {
   const [board, setBoard] = useState(() => {
-    return genetateEmptyBoard();
+    return addNewTile(addNewTile(genetateEmptyBoard()));
   });
 
   useEffect(() => {
@@ -75,7 +96,10 @@ function App() {
         default:
           return;
       }
-      setBoard(newBoard);
+      if (JSON.stringify(newBoard) !== JSON.stringify(board)) {
+        newBoard = addNewTile(newBoard);
+        setBoard(newBoard);
+      }
     };
 
     window.addEventListener("keyup", handleGameControlKey);
