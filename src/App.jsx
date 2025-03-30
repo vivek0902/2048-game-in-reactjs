@@ -3,7 +3,7 @@ import "./App.css";
 
 const SIZE = 4;
 
-const genetateEmptyBoard = () => {
+const generateEmptyBoard = () => {
   return Array(SIZE)
     .fill()
     .map(() => Array(SIZE).fill(0));
@@ -76,13 +76,17 @@ const upMove = (board, scoreRef) =>
 const downMove = (board, scoreRef) =>
   transpose(rightMove(transpose(board), scoreRef));
 
+const isGameOver = (board) => {
+  return getRandomEmptyCell(board) ? false : true;
+};
+
 function App() {
   const [board, setBoard] = useState(() => {
-    return addNewTile(addNewTile(genetateEmptyBoard()));
+    return addNewTile(addNewTile(generateEmptyBoard()));
   });
 
-  // const [score, setScore] = useState(0);
   const scoreRef = useRef(0);
+  const [gameOver, setGameOver] = useState(false);
 
   useEffect(() => {
     const handleGameControlKey = (e) => {
@@ -106,18 +110,30 @@ function App() {
       if (JSON.stringify(newBoard) !== JSON.stringify(board)) {
         newBoard = addNewTile(newBoard);
         setBoard(newBoard);
-        // setScore(scoreRef.current);
+        if (isGameOver(newBoard)) {
+          setGameOver(true);
+        }
       }
     };
 
     window.addEventListener("keyup", handleGameControlKey);
     return () => window.removeEventListener("keyup", handleGameControlKey);
   }, [board, scoreRef]);
-
+  const restartGame = () => {
+    setBoard(addNewTile(addNewTile(generateEmptyBoard())));
+    setGameOver(false);
+    scoreRef.current = 0;
+  };
   return (
     <div className="container">
       <h1>Game 2048</h1>
       <h2>Score: {scoreRef.current}</h2>
+      {gameOver && (
+        <div className="game-over">
+          <h2>Game Over!</h2>
+          <button onClick={restartGame}>Restart</button>
+        </div>
+      )}
       <div className="board">
         {board.map((row, r) =>
           row.map((cell, c) => (

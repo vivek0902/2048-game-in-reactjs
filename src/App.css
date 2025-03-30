@@ -32,6 +32,29 @@ body {
   border-radius: 5px;
 }
 
+.game-over {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  z-index: 2;
+}
+
+.game-over button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #ff4c4c;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
 .x2 {
   background-color: #eee4da;
   color: #727371;
