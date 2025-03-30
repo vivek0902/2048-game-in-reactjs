@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./App.css";
 
 const SIZE = 4;
@@ -33,12 +33,13 @@ const addNewTile = (board) => {
   return newBoard;
 };
 
-const mergeRow = (row) => {
+const mergeRow = (row, scoreRef) => {
   let newRow = row.filter((cell) => cell !== 0);
 
   for (let i = 0; i < newRow.length; i++) {
     if (newRow[i] === newRow[i + 1]) {
       newRow[i] = newRow[i] * 2;
+      scoreRef.current += newRow[i];
       newRow[i + 1] = 0;
     }
   }
@@ -63,35 +64,41 @@ const transpose = (board) => {
   return newBoard;
 };
 
-const leftMove = (board) => board.map((row) => mergeRow(row));
+const leftMove = (board, scoreRef) =>
+  board.map((row) => mergeRow(row, scoreRef));
 
-const rightMove = (board) =>
-  board.map((row) => mergeRow(row.reverse()).reverse());
+const rightMove = (board, scoreRef) =>
+  board.map((row) => mergeRow(row.reverse(), scoreRef).reverse());
 
-const upMove = (board) => transpose(leftMove(transpose(board)));
+const upMove = (board, scoreRef) =>
+  transpose(leftMove(transpose(board), scoreRef));
 
-const downMove = (board) => transpose(rightMove(transpose(board)));
+const downMove = (board, scoreRef) =>
+  transpose(rightMove(transpose(board), scoreRef));
 
 function App() {
   const [board, setBoard] = useState(() => {
     return addNewTile(addNewTile(genetateEmptyBoard()));
   });
 
+  // const [score, setScore] = useState(0);
+  const scoreRef = useRef(0);
+
   useEffect(() => {
     const handleGameControlKey = (e) => {
       let newBoard;
       switch (e.key) {
         case "ArrowLeft":
-          newBoard = leftMove(board);
+          newBoard = leftMove(board, scoreRef);
           break;
         case "ArrowRight":
-          newBoard = rightMove(board);
+          newBoard = rightMove(board, scoreRef);
           break;
         case "ArrowUp":
-          newBoard = upMove(board);
+          newBoard = upMove(board, scoreRef);
           break;
         case "ArrowDown":
-          newBoard = downMove(board);
+          newBoard = downMove(board, scoreRef);
           break;
         default:
           return;
@@ -99,16 +106,18 @@ function App() {
       if (JSON.stringify(newBoard) !== JSON.stringify(board)) {
         newBoard = addNewTile(newBoard);
         setBoard(newBoard);
+        // setScore(scoreRef.current);
       }
     };
 
     window.addEventListener("keyup", handleGameControlKey);
     return () => window.removeEventListener("keyup", handleGameControlKey);
-  }, [board]);
+  }, [board, scoreRef]);
 
   return (
     <div className="container">
       <h1>Game 2048</h1>
+      <h2>Score: {scoreRef.current}</h2>
       <div className="board">
         {board.map((row, r) =>
           row.map((cell, c) => (
