@@ -77,7 +77,18 @@ const downMove = (board, scoreRef) =>
   transpose(rightMove(transpose(board), scoreRef));
 
 const isGameOver = (board) => {
-  return getRandomEmptyCell(board) ? false : true;
+  if (getRandomEmptyCell(board)) return false;
+  for (let r = 0; r < SIZE; r++) {
+    for (let c = 0; c < SIZE; c++) {
+      if (
+        (c < SIZE - 1 && board[r][c] === board[r][c + 1]) ||
+        (r < SIZE - 1 && board[r][c] === board[r + 1][c])
+      ) {
+        return false;
+      }
+    }
+  }
+  return true;
 };
 
 function App() {
@@ -87,6 +98,9 @@ function App() {
 
   const scoreRef = useRef(0);
   const [gameOver, setGameOver] = useState(false);
+  const [highScore, setHighScore] = useState(
+    () => Number(localStorage.getItem("highScore")) || 0
+  );
 
   useEffect(() => {
     const handleGameControlKey = (e) => {
@@ -113,21 +127,29 @@ function App() {
         if (isGameOver(newBoard)) {
           setGameOver(true);
         }
+        if (scoreRef.current > highScore) {
+          setHighScore(scoreRef.current);
+          localStorage.setItem("highScore", scoreRef.current);
+        }
       }
     };
 
     window.addEventListener("keyup", handleGameControlKey);
     return () => window.removeEventListener("keyup", handleGameControlKey);
-  }, [board, scoreRef]);
+  }, [board, scoreRef, highScore]);
+
   const restartGame = () => {
     setBoard(addNewTile(addNewTile(generateEmptyBoard())));
     setGameOver(false);
     scoreRef.current = 0;
   };
+
   return (
     <div className="container">
       <h1>Game 2048</h1>
       <h2>Score: {scoreRef.current}</h2>
+      <h2>High Score: {highScore}</h2>
+
       {gameOver && (
         <div className="game-over">
           <h2>Game Over!</h2>
