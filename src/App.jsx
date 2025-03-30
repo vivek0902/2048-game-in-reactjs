@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./App.css";
 
 const SIZE = 4;
 
-const genetateEmptyBoard = () => {
+const generateEmptyBoard = () => {
   return Array(SIZE)
     .fill()
     .map(() => Array(SIZE).fill(0));
@@ -33,12 +33,13 @@ const addNewTile = (board) => {
   return newBoard;
 };
 
-const mergeRow = (row) => {
+const mergeRow = (row, scoreRef) => {
   let newRow = row.filter((cell) => cell !== 0);
 
   for (let i = 0; i < newRow.length; i++) {
     if (newRow[i] === newRow[i + 1]) {
       newRow[i] = newRow[i] * 2;
+      scoreRef.current += newRow[i];
       newRow[i + 1] = 0;
     }
   }
@@ -63,35 +64,45 @@ const transpose = (board) => {
   return newBoard;
 };
 
-const leftMove = (board) => board.map((row) => mergeRow(row));
+const leftMove = (board, scoreRef) =>
+  board.map((row) => mergeRow(row, scoreRef));
 
-const rightMove = (board) =>
-  board.map((row) => mergeRow(row.reverse()).reverse());
+const rightMove = (board, scoreRef) =>
+  board.map((row) => mergeRow(row.reverse(), scoreRef).reverse());
 
-const upMove = (board) => transpose(leftMove(transpose(board)));
+const upMove = (board, scoreRef) =>
+  transpose(leftMove(transpose(board), scoreRef));
 
-const downMove = (board) => transpose(rightMove(transpose(board)));
+const downMove = (board, scoreRef) =>
+  transpose(rightMove(transpose(board), scoreRef));
+
+const isGameOver = (board) => {
+  return getRandomEmptyCell(board) ? false : true;
+};
 
 function App() {
   const [board, setBoard] = useState(() => {
-    return addNewTile(addNewTile(genetateEmptyBoard()));
+    return addNewTile(addNewTile(generateEmptyBoard()));
   });
+
+  const scoreRef = useRef(0);
+  const [gameOver, setGameOver] = useState(false);
 
   useEffect(() => {
     const handleGameControlKey = (e) => {
       let newBoard;
       switch (e.key) {
         case "ArrowLeft":
-          newBoard = leftMove(board);
+          newBoard = leftMove(board, scoreRef);
           break;
         case "ArrowRight":
-          newBoard = rightMove(board);
+          newBoard = rightMove(board, scoreRef);
           break;
         case "ArrowUp":
-          newBoard = upMove(board);
+          newBoard = upMove(board, scoreRef);
           break;
         case "ArrowDown":
-          newBoard = downMove(board);
+          newBoard = downMove(board, scoreRef);
           break;
         default:
           return;
@@ -99,16 +110,30 @@ function App() {
       if (JSON.stringify(newBoard) !== JSON.stringify(board)) {
         newBoard = addNewTile(newBoard);
         setBoard(newBoard);
+        if (isGameOver(newBoard)) {
+          setGameOver(true);
+        }
       }
     };
 
     window.addEventListener("keyup", handleGameControlKey);
     return () => window.removeEventListener("keyup", handleGameControlKey);
-  }, [board]);
-
+  }, [board, scoreRef]);
+  const restartGame = () => {
+    setBoard(addNewTile(addNewTile(generateEmptyBoard())));
+    setGameOver(false);
+    scoreRef.current = 0;
+  };
   return (
     <div className="container">
       <h1>Game 2048</h1>
+      <h2>Score: {scoreRef.current}</h2>
+      {gameOver && (
+        <div className="game-over">
+          <h2>Game Over!</h2>
+          <button onClick={restartGame}>Restart</button>
+        </div>
+      )}
       <div className="board">
         {board.map((row, r) =>
           row.map((cell, c) => (
