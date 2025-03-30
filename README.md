@@ -58,7 +58,7 @@ This is a simple implementation of the 2048 game built using React. The game all
 
 ## Screenshots
 
-![2048 Game Screenshot](https://via.placeholder.com/400) _(Replace with actual screenshot)_
+![2048 Game Screenshot](https://images.crazygames.com/games/2048/cover_16x9-1707828856995.png) _(Replace with actual screenshot)_
 
 ## Future Enhancements
 
