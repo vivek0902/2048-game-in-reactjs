@@ -2,6 +2,7 @@
 
 # 2048 Game in React
 live demo : https://vivek0902.github.io/2048-game-in-reactjs/
+
 This is a simple implementation of the 2048 game built using React. The game allows players to slide numbered tiles on a 4x4 grid to combine them into higher numbers, aiming to reach 2048.
 
 ## Features
