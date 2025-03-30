@@ -60,10 +60,6 @@ This is a simple implementation of the 2048 game built using React. The game all
 - **CSS** for styling
 - **JavaScript** for game logic
 
-## Screenshots
-
-![2048 Game Screenshot](https://images.crazygames.com/games/2048/cover_16x9-1707828856995.png) 
-
 ## Future Enhancements
 
 - **Undo Feature**
