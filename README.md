@@ -1,77 +1,91 @@
-### README.md
-
 # 2048 Game in React
-live demo : https://vivek0902.github.io/2048-game-in-reactjs/
 
-This is a simple implementation of the 2048 game built using React. The game allows players to slide numbered tiles on a 4x4 grid to combine them into higher numbers, aiming to reach 2048.
+**Live Demo:** [Play 2048](https://vivek0902.github.io/2048-game-in-reactjs/)
+
+This is a simple implementation of the **2048** game built using React. The game allows players to slide numbered tiles on a **4×4 grid** to combine them into higher numbers, aiming to reach **2048**.
+
+![2048 Game Screenshot](https://github.com/user-attachments/assets/ddeab2bd-088c-4f6b-8379-033602d8fb65)
+
+---
 
 ## Features
 
-- **Keyboard Controls**: Use arrow keys (`← ↑ → ↓`) to move tiles.
-- **Auto Tile Addition**: A new tile (`2` or `4`) appears after every move.
-- **Tile Merging**: Tiles with the same value merge when moved in the same direction.
-- **Game Board Styling**: A visually appealing 2048 board with different colors for each tile value.
+- **Keyboard Controls:** Use arrow keys (`← ↑ → ↓`) to move tiles.
+- **Auto Tile Addition:** A new tile (`2` or `4`) appears after every move.
+- **Tile Merging:** Tiles with the same value merge when moved in the same direction.
+- **Game Over Detection:** The game ends when no more moves are possible.
+- **Score Tracking:** Keeps track of the current and highest score.
+- **Game Restart:** Restart the game at any point.
+- **Styled UI:** A visually appealing board with smooth animations.
 
-## Installation
+---
 
-1. Clone the repository:
+## Installation & Running Locally
 
+1. **Clone the repository:**
    ```sh
-   git clone https://github.com/your-username/2048-game.git
-   cd 2048-game
+   git clone https://github.com/vivek0902/2048-game-in-reactjs.git
+   cd 2048-game-in-reactjs
    ```
 
-2. Install dependencies:
-
+2. **Install dependencies:**
    ```sh
    npm install
    ```
 
-3. Start the game:
-
+3. **Start the development server:**
    ```sh
    npm start
    ```
+   The game will run on `http://localhost:3000`.
+
+---
 
 ## How to Play
 
-- Use the **arrow keys** to slide tiles in the desired direction.
-- Tiles with the **same number** merge when they collide.
-- The game **ends** when no more moves are possible.
-- The goal is to **reach 2048**!
+- **Use Arrow Keys** (`← ↑ → ↓`) to move tiles in the desired direction.
+- **Merging:** Tiles with the same number merge when they collide.
+- **Winning:** The goal is to **reach 2048**!
+- **Game Over:** The game ends when there are no valid moves left.
+
+---
 
 ## Project Structure
 
 ```
-2048-game/
+2048-game-in-reactjs/
 │── src/
-│   ├── App.jsx       # Main game logic
-│   ├── App.css       # Styling for the board and tiles
-│── package.json      # Dependencies and scripts
-│── README.md         # Project documentation
+│   ├── components/       # Reusable components
+│   ├── App.js           # Main game logic
+│   ├── style.css        # Styling for the board and tiles
+│── public/
+│── package.json        # Dependencies and scripts
+│── README.md           # Project documentation
 ```
-
-## Technologies Used
-
-- **React** (useState, useEffect)
-- **CSS** for styling
-- **JavaScript** for game logic
-
-## Screenshots
-
-![2048 Game Screenshot](https://images.crazygames.com/games/2048/cover_16x9-1707828856995.png) 
-
-## Future Enhancements
-
-- **Undo Feature**
-- **Game Over & Restart Option**
-- **Local Storage for High Scores**
-- **Mobile Touch Support**
-
-## License
-
-This project is open-source and available.
 
 ---
 
-Feel free to modify this README as needed! 🚀
+## Technologies Used
+
+- **React** (useState, useEffect, useRef)
+- **CSS** for styling and animations
+- **JavaScript** for game logic
+- **Local Storage** for high score tracking
+
+---
+
+## Future Enhancements
+
+- **Undo Feature** to revert the last move.
+- **Game Over Modal** with better UI feedback.
+- **Dark Mode Support** for better UI experience.
+- **Mobile Touch Support** for better gameplay on mobile devices.
+- **AI Bot Mode** to play automatically.
+
+---
+
+Feel free to modify and improve!
+
+🚀 Happy Coding!
+
+
