@@ -163,6 +163,7 @@ function App() {
       newBoard =
         diffX > 0 ? rightMove(board, scoreRef) : leftMove(board, scoreRef);
     } else {
+      e.preventDefault();
       newBoard =
         diffY > 0 ? downMove(board, scoreRef) : upMove(board, scoreRef);
     }
