@@ -102,6 +102,11 @@ function App() {
     () => Number(localStorage.getItem("highScore")) || 0
   );
 
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let touchEndX = 0;
+  let touchEndY = 0;
+
   useEffect(() => {
     const handleGameControlKey = (e) => {
       let newBoard;
@@ -138,6 +143,45 @@ function App() {
     return () => window.removeEventListener("keyup", handleGameControlKey);
   }, [board, scoreRef, highScore]);
 
+  const handleTouchStart = (e) => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    // console.log(touchStartX);
+    // console.log(touchStartY);
+  };
+
+  const handleTouchEnd = (e) => {
+    touchEndX = e.changedTouches[0].clientX;
+    touchEndY = e.changedTouches[0].clientY;
+    // console.log(touchEndX);
+    // console.log(touchEndY);
+    let diffX = touchEndX - touchStartX;
+    let diffY = touchEndY - touchStartY;
+
+    let newBoard;
+    if (Math.abs(diffX) > Math.abs(diffY)) {
+      newBoard =
+        diffX > 0 ? rightMove(board, scoreRef) : leftMove(board, scoreRef);
+    } else {
+      newBoard =
+        diffY > 0 ? downMove(board, scoreRef) : upMove(board, scoreRef);
+    }
+    updateBoard(newBoard);
+  };
+
+  const updateBoard = (newBoard) => {
+    if (JSON.stringify(newBoard) !== JSON.stringify(board)) {
+      newBoard = addNewTile(newBoard);
+      setBoard(newBoard);
+      if (isGameOver(newBoard)) {
+        setGameOver(true);
+      }
+      if (scoreRef.current > highScore) {
+        setHighScore(scoreRef.current);
+        localStorage.setItem("highScore", scoreRef.current);
+      }
+    }
+  };
   const restartGame = () => {
     setBoard(addNewTile(addNewTile(generateEmptyBoard())));
     setGameOver(false);
@@ -156,7 +200,11 @@ function App() {
           <button onClick={restartGame}>Restart</button>
         </div>
       )}
-      <div className="board">
+      <div
+        className="board"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
         {board.map((row, r) =>
           row.map((cell, c) => (
             <div key={`${r}-${c}`} className={`tile x${cell}`}>
